@@ -1,5 +1,5 @@
 from termcolor import*
-import time
+import time, random
 class init:
     def __init__(self, grille_initial = False):
         
@@ -82,17 +82,45 @@ class init:
                 self.grille_actuel.avance_de_génération(self, 1)
                 print(self.grille_actuel.afficher(self, largeur, bordure=bordure,afficher = (colored("génération "+str(i+1)+" :                                         ", "black", "on_red"))))     
 
-        def simulation(self, nb_de_fois, délai = 5, largeur = 1, bordure=0):
-            print(self.grille_actuel.afficher(self, largeur, bordure=bordure))   
-            time.sleep(délai*0.1)
-            print("\033c")
-            for i in range(nb_de_fois):
-                self.grille_actuel.avance_de_génération(self, 1)
-                print(self.grille_actuel.afficher(self, largeur, bordure=bordure))     
+        def simulation(self, nb_de_fois=1, délai = 5, largeur = 1, bordure=0, mode = 1):
+            if mode == 1:
+                print(self.grille_actuel.afficher(self, largeur, bordure=bordure, afficher=(colored("génération "+str(0)+" :                                         ", "black", "on_red"))))   
                 time.sleep(délai*0.1)
                 print("\033c")
-            print(self.grille_actuel.afficher(self, largeur, bordure=bordure,afficher = (colored("génération "+str(i+1)+" :                                         ", "black", "on_red"))))     
-
+                for i in range(nb_de_fois):
+                    verif = self.génération_actuel
+                    self.grille_actuel.avance_de_génération(self, 1)
+                    if verif == self.génération_actuel:
+                        break
+                    print(self.grille_actuel.afficher(self, largeur, bordure=bordure, afficher = (colored("génération "+str(i+1)+" :                                         ", "black", "on_red"))))     
+                    time.sleep(délai*0.1)
+                    print("\033c")
+                print(self.grille_actuel.afficher(self, largeur, bordure=bordure,afficher = (colored("génération "+str(i+1)+" :                                         ", "black", "on_red"))))     
+            elif mode == 2:
+                print(self.grille_actuel.afficher(self, largeur, bordure=bordure, afficher=(colored("génération "+str(0)+" :                                         ", "black", "on_red"))))   
+                time.sleep(délai*0.1)
+                print("\033c")
+                a=1
+                i=0
+                stop = 0
+                while a:
+                    verif1 = self.génération_actuel
+                    for g in range(2):
+                        verif2 = self.génération_actuel
+                        self.grille_actuel.avance_de_génération(self, 1)
+                        if verif2 == self.génération_actuel:
+                            stop = 1
+                            break
+                        print(self.grille_actuel.afficher(self, largeur, bordure=bordure, afficher = (colored("génération "+str(i+1)+" :                                         ", "black", "on_red"))))     
+                        time.sleep(délai*0.1)
+                        print("\033c")
+                        i+=1
+                    if stop == 1:
+                        break
+                    if verif1 == self.génération_actuel:
+                        break
+                print(self.grille_actuel.afficher(self, largeur, bordure=bordure,afficher = (colored("génération "+str(i+1)+" :                                         ", "black", "on_red"))))     
+     
     class nouvelle_grille:
         def taille(self, largeur, hauteur):
             self.génération_actuel = []
@@ -100,6 +128,18 @@ class init:
                 text = ""
                 for x in range(largeur):
                     text += "."
+                self.génération_actuel.append([text])
+        
+        def aléatoire(self, largeur, hauteur, aléa = 4):
+            self.génération_actuel = []
+            choix = []
+            for i in range(aléa-1):
+                choix.append(".")
+            choix.append("#")
+            for y in range(hauteur):
+                text = ""
+                for x in range(largeur):
+                    text += random.choice(choix)
                 self.génération_actuel.append([text])
     
     class ajouter_élément:
